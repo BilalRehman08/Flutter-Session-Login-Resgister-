@@ -11,6 +11,7 @@ class Login extends StatefulWidget {
 class _LoginState extends State<Login> {
   String _email;
   String _password;
+  bool loginacc = false;
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   Future<void> signIn() async {
@@ -24,6 +25,9 @@ class _LoginState extends State<Login> {
         Navigator.push(
             context, MaterialPageRoute(builder: (context) => Home()));
       } on FirebaseAuthException catch (e) {
+        setState(() {
+          loginacc = true;
+        });
         if (e.code == 'user-not-found') {
           print('No user found for that email.');
         } else if (e.code == 'wrong-password') {
@@ -71,6 +75,7 @@ class _LoginState extends State<Login> {
                   elevation: 4,
                   child: TextFormField(
                       decoration: InputDecoration(
+                        errorText: loginacc ? 'User not found' : null,
                         enabledBorder: OutlineInputBorder(
                           borderSide: BorderSide(color: Colors.grey[300]),
                           borderRadius: BorderRadius.all(Radius.circular(10.0)),
@@ -94,6 +99,7 @@ class _LoginState extends State<Login> {
                   child: TextFormField(
                       obscureText: true,
                       decoration: InputDecoration(
+                        errorText: loginacc ? 'Invalid Password' : null,
                         enabledBorder: OutlineInputBorder(
                           borderSide: BorderSide(color: Colors.grey[300]),
                           borderRadius: BorderRadius.all(Radius.circular(10.0)),
